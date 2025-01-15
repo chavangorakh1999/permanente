@@ -17,7 +17,7 @@ import { ReactComponent as Transportation } from "../assets/icons/Transportation
 import { ReactComponent as Escalation } from "../assets/icons/Escalation.svg";
 
 const ProfileDetails = (props: any) => {
-	let { activePatient, setActivePatient } = props;
+	let { activePatient } = props;
 	return (
 		<div className="h-full px-[24px] py-[24px]">
 			<div className="flex flex-row w-[859px] h-[169px] bg-secondary rounded-[8px] p-6">
