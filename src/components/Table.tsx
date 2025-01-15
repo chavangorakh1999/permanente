@@ -372,12 +372,19 @@ const getStatusIcon = (status: string) => {
 };
 
 const Table = (props: any) => {
-	const { isTableMinimised, setIsTableMinimised, setActivePatient } = props;
+	const {
+		isTableMinimised,
+		setIsTableMinimised,
+		setActivePatient,
+		setSelectedRow,
+		selectedRow,
+	} = props;
 
-	const handleCellClick = (rowData: Patient) => {
+	const handleCellClick = (rowData: Patient, index: number) => {
 		console.log(rowData);
 		!isTableMinimised && setIsTableMinimised(true);
 		setActivePatient(rowData);
+		setSelectedRow(index);
 		return;
 	};
 
@@ -390,10 +397,11 @@ const Table = (props: any) => {
 					header: "Patient ID / Name",
 					cell: (info) => {
 						const rowData = info.row.original;
+						const index = info.row.index;
 						return (
 							<div
 								className="px-4 py-5"
-								onClick={() => handleCellClick(rowData)}
+								onClick={() => handleCellClick(rowData, index)}
 							>
 								{info.getValue()}
 							</div>
@@ -621,15 +629,20 @@ const Table = (props: any) => {
 					header: "Patient Details",
 					cell: (info) => {
 						const rowData = info.row.original;
+						const rowIndex = info.row.index;
 						return (
 							<div
-								className="flex flex-row pt-[20px] pb-[19px] pl-[20px] w-full items-center"
-								onClick={() => handleCellClick(rowData)}
+								className="flex flex-row pt-[20px] pb-[19px] pl-[20px] w-full items-center cursor-pointer"
+								onClick={() => handleCellClick(rowData, rowIndex)}
 							>
 								<ProfilePlaceholder />
 								<div className="flex flex-col pl-[10px]">
 									<h5 className="text-large font-semibold">{rowData.name}</h5>
-									<span className="text-small font-light text-[#718096]">{`${rowData.age}, ${rowData.gender}, MRN#${rowData.mrn}`}</span>
+									<span
+										className={`text-small font-light ${
+											selectedRow === rowIndex ? "text-white" : "text-[#718096]"
+										}`}
+									>{`${rowData.age}, ${rowData.gender}, MRN#${rowData.mrn}`}</span>
 								</div>
 							</div>
 						);
@@ -732,8 +745,13 @@ const Table = (props: any) => {
 						))}
 				</thead>
 				<tbody className="divide-y divide-solid divide-[#EBEBEB]">
-					{table.getRowModel().rows.map((row) => (
-						<tr key={row.id}>
+					{table.getRowModel().rows.map((row, index) => (
+						<tr
+							key={row.id}
+							className={`${
+								selectedRow === index ? "bg-primary text-white" : ""
+							}`}
+						>
 							{row.getVisibleCells().map((cell) => (
 								<td key={cell.id} className="relative">
 									{flexRender(cell.column.columnDef.cell, cell.getContext())}

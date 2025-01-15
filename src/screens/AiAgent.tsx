@@ -8,6 +8,7 @@ const AiAgent = () => {
 	//Mainting State for Table
 	const [isTableMinimised, setIsTableMinimised] = useState(false);
 	const [activePatient, setActivePatient] = useState({});
+	const [selectedRow, setSelectedRow] = useState<number | null>(null);
 	return (
 		<div className="h-full">
 			<Header setIsTableMinimised={setIsTableMinimised} />
@@ -68,6 +69,8 @@ const AiAgent = () => {
 					isTableMinimised={isTableMinimised}
 					setIsTableMinimised={setIsTableMinimised}
 					setActivePatient={setActivePatient}
+					selectedRow={selectedRow}
+					setSelectedRow={setSelectedRow}
 				/>
 				{isTableMinimised && (
 					<ProfileDetails
