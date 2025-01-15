@@ -1,0 +1,2 @@
+export const MINIMISE_TABLE = "MINIMISE_TABLE";
+export const ACTIVE_PATIENT = "ACTIVE_PATIENT";
