@@ -659,7 +659,13 @@ const Table = (props: any) => {
 									<h5 className="text-large font-semibold">
 										{rowData.aptDate}
 									</h5>
-									<span className="text-small font-light text-[#718096]">
+									<span
+										className={`text-small font-light ${
+											selectedRow === info.row.index
+												? "text-white"
+												: "text-[#718096]"
+										}`}
+									>
 										${rowData.aptTime}
 									</span>
 								</div>
