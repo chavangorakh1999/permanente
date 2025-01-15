@@ -19,7 +19,9 @@ const Header = (props: any) => {
 					className="flex justify-center items-center py-4 px-6 rounded-full bg-primary"
 					onClick={() => setIsTableMinimised(false)}
 				>
-					<h2 className="text-white font-normal text-normal">AI Agents</h2>
+					<h2 className="text-white font-normal text-normal cursor-pointer">
+						AI Agents
+					</h2>
 				</div>
 				<div className="flex justify-center items-center py-4 px-6 rounded-full bg-white">
 					<h2 className="font-normal text-normal">Reports</h2>
