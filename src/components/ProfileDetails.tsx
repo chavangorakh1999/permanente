@@ -21,8 +21,13 @@ const ProfileDetails = (props: any) => {
 	return (
 		<div className="h-full px-[24px] py-[24px]">
 			<div className="flex flex-row w-[859px] h-[169px] bg-secondary rounded-[8px] p-6">
-				<div className="h-[120px]">
-					<Profile height="100%" width="100%" />
+				<div className="h-[120px] min-w-[120px]">
+					{/* <Profile height="100%" width="100%" /> */}
+					<img
+						src={activePatient?.imageUrl}
+						alt="profile"
+						className="h-full w-full object"
+					/>
 				</div>
 				<div className="w-full h-full ml-[24px]">
 					<div className="w-full flex flex-row justify-between pb-[12px]">

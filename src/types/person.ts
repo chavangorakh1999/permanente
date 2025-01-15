@@ -25,4 +25,5 @@ export interface Patient {
 	a8: string;
 	agentStatus: object;
 	patientStatus: object;
+	imageUrl: string;
 }
