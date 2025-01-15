@@ -400,7 +400,7 @@ const Table = (props: any) => {
 						const index = info.row.index;
 						return (
 							<div
-								className="px-4 py-5"
+								className="px-4 py-5 cursor-pointer"
 								onClick={() => handleCellClick(rowData, index)}
 							>
 								{info.getValue()}
@@ -755,7 +755,9 @@ const Table = (props: any) => {
 						<tr
 							key={row.id}
 							className={`${
-								selectedRow === index ? "bg-primary text-white" : ""
+								selectedRow === index && isTableMinimised
+									? "bg-primary text-white"
+									: ""
 							}`}
 						>
 							{row.getVisibleCells().map((cell) => (
