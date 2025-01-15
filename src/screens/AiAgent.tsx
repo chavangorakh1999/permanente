@@ -5,6 +5,7 @@ import { ReactComponent as People } from "../assets/icons/People.svg";
 import Table from "../components/Table";
 import ProfileDetails from "../components/ProfileDetails";
 const AiAgent = () => {
+	//Mainting State for Table
 	const [isTableMinimised, setIsTableMinimised] = useState(false);
 	const [activePatient, setActivePatient] = useState({});
 	return (
