@@ -150,7 +150,7 @@ const ProfileDetails = (props: any) => {
 						</div>
 						<div className="flex flex-row items-center gap-x-[16px]">
 							<div className="h-[36px] w-[36px]">
-								<AgentIcon height={"100%"} width={"100%"} />
+								<AgentIcon height={"100%"} width={"100%"} stroke="black" />
 							</div>
 							<div className="flex flex-col ">
 								<span className="text-xl font-semibold text-primaryText">
