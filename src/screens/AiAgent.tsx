@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Header from "../components/Header";
 import CountCard from "../components/CountCard";
 import { ReactComponent as People } from "../assets/icons/People.svg";
 import Table from "../components/Table";
@@ -11,7 +10,6 @@ const AiAgent = () => {
 	const [selectedRow, setSelectedRow] = useState<number | null>(null);
 	return (
 		<div className="h-full">
-			<Header setIsTableMinimised={setIsTableMinimised} />
 			{!isTableMinimised && (
 				<div className="flex flex-row pt-[22px] gap-x-[25px]">
 					<CountCard
@@ -49,7 +47,7 @@ const AiAgent = () => {
 			<div
 				className={`flex ${
 					isTableMinimised ? "flex-row" : "flex-col"
-				} w-full h-full bg-white mt-[22px] rounded-xl divide-y divide-solid divide-[#EBEBEB]`}
+				} w-full h-full bg-white mt-[22px] mb-[100px] rounded-xl divide-y divide-solid divide-[#EBEBEB]`}
 			>
 				{!isTableMinimised && (
 					<div className="flex flex-row">

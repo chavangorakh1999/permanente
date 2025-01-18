@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	useReactTable,
 	getCoreRowModel,
 	flexRender,
 	ColumnDef,
 } from "@tanstack/react-table";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPatients } from "../redux/actions/patientActions";
+import { RootState, AppDispatch } from "../store";
 import { ReactComponent as Success } from "../assets/icons/Success.svg";
 import { ReactComponent as Failed } from "../assets/icons/Failed.svg";
 import { ReactComponent as NotAvailable } from "../assets/icons/NotAvailable.svg";
@@ -12,506 +15,9 @@ import { ReactComponent as Waiting } from "../assets/icons/Waiting.svg";
 import { ReactComponent as Error } from "../assets/icons/Error.svg";
 import { ReactComponent as SuccessIcon } from "../assets/icons/SuccessIcon.svg";
 import { ReactComponent as ProfilePlaceholder } from "../assets/icons/ProfilePlaceholder.svg";
-import { Patient } from "../types/person";
+import { Patient } from "../types/patient";
 import IconInfo from "./IconInfo";
-
-const data: Patient[] = [
-	{
-		id: "1",
-		aptDate: "2025-01-15",
-		aptTime: "10:00 AM",
-		age: "52",
-		gender: "Male",
-		mrn: "11098",
-		honorific: "Mr.",
-		name: "William Pointing",
-		email: "william.pointing@example.com",
-		phone: "+1 (123) 456-7890",
-		weight: "175",
-		bloodGroup: "O+",
-		risk: "High",
-		noShow: "No",
-		isScheduled: true,
-		patientId: "11098 - William Pointing",
-		a1: "success",
-		a2: "success",
-		a3: "success",
-		a4: "not_available",
-		a5: "success",
-		a6: "warning",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Escalated",
-		},
-		patientStatus: {
-			patientStatus: "Pending",
-		},
-		imageUrl: "https://i.ibb.co/wQj5BDN/image.png",
-	},
-	{
-		id: "2",
-		aptDate: "2025-01-15",
-		aptTime: "11:30 AM",
-		age: "45",
-		gender: "Male",
-		mrn: "11046",
-		honorific: "Mr.",
-		name: "James Gilchrist",
-		email: "james.gilchrist@example.com",
-		phone: "+1 (234) 567-8901",
-		weight: "168",
-		bloodGroup: "B+",
-		risk: "Medium",
-		noShow: "No",
-		isScheduled: true,
-		patientId: "11046 - James Gilchrist",
-		a1: "success",
-		a2: "success",
-		a3: "success",
-		a4: "success",
-		a5: "warning",
-		a6: "waiting",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Work in progress",
-		},
-		patientStatus: {
-			patientStatus: "Pending",
-		},
-		imageUrl: "https://i.ibb.co/TPMJFcx/image-copy.png",
-	},
-	{
-		id: "3",
-		aptDate: "2025-01-15",
-		aptTime: "9:00 AM",
-		age: "38",
-		gender: "Male",
-		mrn: "11025",
-		honorific: "Mr.",
-		name: "Michael Collins",
-		email: "michael.collins@example.com",
-		phone: "+1 (345) 678-9012",
-		weight: "170",
-		bloodGroup: "A-",
-		risk: "Low",
-		noShow: "No",
-		isScheduled: true,
-		patientId: "11025 - Michael Collins",
-		a1: "success",
-		a2: "success",
-		a3: "success",
-		a4: "failed",
-		a5: "waiting",
-		a6: "waiting",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Completed",
-		},
-		patientStatus: {
-			patientStatus: "Scheduled",
-		},
-		imageUrl: "https://i.ibb.co/2MMCZNL/image-copy-4.png",
-	},
-	{
-		id: "4",
-		aptDate: "2025-01-15",
-		aptTime: "2:00 PM",
-		age: "41",
-		gender: "Male",
-		mrn: "11048",
-		honorific: "Mr.",
-		name: "Nicholas Trump",
-		email: "nicholas.trump@example.com",
-		phone: "+1 (456) 789-0123",
-		weight: "185",
-		bloodGroup: "AB+",
-		risk: "Medium",
-		noShow: "No",
-		isScheduled: true,
-		patientId: "11048 - Nicholas Trump",
-		a1: "success",
-		a2: "success",
-		a3: "success",
-		a4: "not_available",
-		a5: "waiting",
-		a6: "waiting",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Work in progress",
-		},
-		patientStatus: {
-			patientStatus: "Pending",
-		},
-		imageUrl: "https://i.ibb.co/Lkr2QBX/image-copy-3.png",
-	},
-	{
-		id: "5",
-		aptDate: "2025-01-15",
-		aptTime: "3:30 PM",
-		age: "49",
-		gender: "Male",
-		mrn: "11020",
-		honorific: "Mr.",
-		name: "William Pointing",
-		email: "william.p2@example.com",
-		phone: "+1 (567) 890-1234",
-		weight: "172",
-		bloodGroup: "O-",
-		risk: "High",
-		noShow: "Yes",
-		isScheduled: true,
-		patientId: "11020 - William Pointing",
-		a1: "success",
-		a2: "success",
-		a3: "failed",
-		a4: "waiting",
-		a5: "waiting",
-		a6: "waiting",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Escalated",
-		},
-		patientStatus: {
-			patientStatus: "Pending",
-		},
-		imageUrl: "https://i.ibb.co/BVHstk8/image-copy-2.png",
-	},
-	{
-		id: "1",
-		aptDate: "2025-01-15",
-		aptTime: "10:00 AM",
-		age: "52",
-		gender: "Male",
-		mrn: "11098",
-		honorific: "Mr.",
-		name: "William Pointing",
-		email: "william.pointing@example.com",
-		phone: "+1 (123) 456-7890",
-		weight: "175",
-		bloodGroup: "O+",
-		risk: "High",
-		noShow: "No",
-		isScheduled: true,
-		patientId: "11098 - William Pointing",
-		a1: "success",
-		a2: "success",
-		a3: "success",
-		a4: "not_available",
-		a5: "success",
-		a6: "warning",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Escalated",
-		},
-		patientStatus: {
-			patientStatus: "Pending",
-		},
-		imageUrl: "https://i.ibb.co/wQj5BDN/image.png",
-	},
-	{
-		id: "2",
-		aptDate: "2025-01-15",
-		aptTime: "11:30 AM",
-		age: "45",
-		gender: "Male",
-		mrn: "11046",
-		honorific: "Mr.",
-		name: "James Gilchrist",
-		email: "james.gilchrist@example.com",
-		phone: "+1 (234) 567-8901",
-		weight: "168",
-		bloodGroup: "B+",
-		risk: "Medium",
-		noShow: "No",
-		isScheduled: true,
-		patientId: "11046 - James Gilchrist",
-		a1: "success",
-		a2: "success",
-		a3: "success",
-		a4: "success",
-		a5: "warning",
-		a6: "waiting",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Work in progress",
-		},
-		patientStatus: {
-			patientStatus: "Pending",
-		},
-		imageUrl: "https://i.ibb.co/TPMJFcx/image-copy.png",
-	},
-	{
-		id: "3",
-		aptDate: "2025-01-15",
-		aptTime: "9:00 AM",
-		age: "38",
-		gender: "Male",
-		mrn: "11025",
-		honorific: "Mr.",
-		name: "Michael Collins",
-		email: "michael.collins@example.com",
-		phone: "+1 (345) 678-9012",
-		weight: "170",
-		bloodGroup: "A-",
-		risk: "Low",
-		noShow: "No",
-		isScheduled: true,
-		patientId: "11025 - Michael Collins",
-		a1: "success",
-		a2: "success",
-		a3: "success",
-		a4: "failed",
-		a5: "waiting",
-		a6: "waiting",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Completed",
-		},
-		patientStatus: {
-			patientStatus: "Scheduled",
-		},
-		imageUrl: "https://i.ibb.co/2MMCZNL/image-copy-4.png",
-	},
-	{
-		id: "4",
-		aptDate: "2025-01-15",
-		aptTime: "2:00 PM",
-		age: "41",
-		gender: "Male",
-		mrn: "11048",
-		honorific: "Mr.",
-		name: "Nicholas Trump",
-		email: "nicholas.trump@example.com",
-		phone: "+1 (456) 789-0123",
-		weight: "185",
-		bloodGroup: "AB+",
-		risk: "Medium",
-		noShow: "No",
-		isScheduled: true,
-		patientId: "11048 - Nicholas Trump",
-		a1: "success",
-		a2: "success",
-		a3: "success",
-		a4: "not_available",
-		a5: "waiting",
-		a6: "waiting",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Work in progress",
-		},
-		patientStatus: {
-			patientStatus: "Pending",
-		},
-		imageUrl: "https://i.ibb.co/Lkr2QBX/image-copy-3.png",
-	},
-	{
-		id: "5",
-		aptDate: "2025-01-15",
-		aptTime: "3:30 PM",
-		age: "49",
-		gender: "Male",
-		mrn: "11020",
-		honorific: "Mr.",
-		name: "William Pointing",
-		email: "william.p2@example.com",
-		phone: "+1 (567) 890-1234",
-		weight: "172",
-		bloodGroup: "O-",
-		risk: "High",
-		noShow: "Yes",
-		isScheduled: true,
-		patientId: "11020 - William Pointing",
-		a1: "success",
-		a2: "success",
-		a3: "failed",
-		a4: "waiting",
-		a5: "waiting",
-		a6: "waiting",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Escalated",
-		},
-		patientStatus: {
-			patientStatus: "Pending",
-		},
-		imageUrl: "https://i.ibb.co/BVHstk8/image-copy-2.png",
-	},
-	{
-		id: "1",
-		aptDate: "2025-01-15",
-		aptTime: "10:00 AM",
-		age: "52",
-		gender: "Male",
-		mrn: "11098",
-		honorific: "Mr.",
-		name: "William Pointing",
-		email: "william.pointing@example.com",
-		phone: "+1 (123) 456-7890",
-		weight: "175",
-		bloodGroup: "O+",
-		risk: "High",
-		noShow: "No",
-		isScheduled: true,
-		patientId: "11098 - William Pointing",
-		a1: "success",
-		a2: "success",
-		a3: "success",
-		a4: "not_available",
-		a5: "success",
-		a6: "warning",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Escalated",
-		},
-		patientStatus: {
-			patientStatus: "Pending",
-		},
-		imageUrl: "https://i.ibb.co/wQj5BDN/image.png",
-	},
-	{
-		id: "2",
-		aptDate: "2025-01-15",
-		aptTime: "11:30 AM",
-		age: "45",
-		gender: "Male",
-		mrn: "11046",
-		honorific: "Mr.",
-		name: "James Gilchrist",
-		email: "james.gilchrist@example.com",
-		phone: "+1 (234) 567-8901",
-		weight: "168",
-		bloodGroup: "B+",
-		risk: "Medium",
-		noShow: "No",
-		isScheduled: true,
-		patientId: "11046 - James Gilchrist",
-		a1: "success",
-		a2: "success",
-		a3: "success",
-		a4: "success",
-		a5: "warning",
-		a6: "waiting",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Work in progress",
-		},
-		patientStatus: {
-			patientStatus: "Pending",
-		},
-		imageUrl: "https://i.ibb.co/TPMJFcx/image-copy.png",
-	},
-	{
-		id: "3",
-		aptDate: "2025-01-15",
-		aptTime: "9:00 AM",
-		age: "38",
-		gender: "Male",
-		mrn: "11025",
-		honorific: "Mr.",
-		name: "Michael Collins",
-		email: "michael.collins@example.com",
-		phone: "+1 (345) 678-9012",
-		weight: "170",
-		bloodGroup: "A-",
-		risk: "Low",
-		noShow: "No",
-		isScheduled: true,
-		patientId: "11025 - Michael Collins",
-		a1: "success",
-		a2: "success",
-		a3: "success",
-		a4: "failed",
-		a5: "waiting",
-		a6: "waiting",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Completed",
-		},
-		patientStatus: {
-			patientStatus: "Scheduled",
-		},
-		imageUrl: "https://i.ibb.co/2MMCZNL/image-copy-4.png",
-	},
-	{
-		id: "4",
-		aptDate: "2025-01-15",
-		aptTime: "2:00 PM",
-		age: "41",
-		gender: "Male",
-		mrn: "11048",
-		honorific: "Mr.",
-		name: "Nicholas Trump",
-		email: "nicholas.trump@example.com",
-		phone: "+1 (456) 789-0123",
-		weight: "185",
-		bloodGroup: "AB+",
-		risk: "Medium",
-		noShow: "No",
-		isScheduled: true,
-		patientId: "11048 - Nicholas Trump",
-		a1: "success",
-		a2: "success",
-		a3: "success",
-		a4: "not_available",
-		a5: "waiting",
-		a6: "waiting",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Work in progress",
-		},
-		patientStatus: {
-			patientStatus: "Pending",
-		},
-		imageUrl: "https://i.ibb.co/Lkr2QBX/image-copy-3.png",
-	},
-	{
-		id: "5",
-		aptDate: "2025-01-15",
-		aptTime: "3:30 PM",
-		age: "49",
-		gender: "Male",
-		mrn: "11020",
-		honorific: "Mr.",
-		name: "William Pointing",
-		email: "william.p2@example.com",
-		phone: "+1 (567) 890-1234",
-		weight: "172",
-		bloodGroup: "O-",
-		risk: "High",
-		noShow: "Yes",
-		isScheduled: true,
-		patientId: "11020 - William Pointing",
-		a1: "success",
-		a2: "success",
-		a3: "failed",
-		a4: "waiting",
-		a5: "waiting",
-		a6: "waiting",
-		a7: "waiting",
-		a8: "waiting",
-		agentStatus: {
-			agentStatus: "Escalated",
-		},
-		patientStatus: {
-			patientStatus: "Pending",
-		},
-		imageUrl: "https://i.ibb.co/BVHstk8/image-copy-2.png",
-	},
-];
+import StatusButton from "./StatusButton";
 
 const getStatusIcon = (status: string) => {
 	switch (status) {
@@ -546,7 +52,73 @@ const getStatusIcon = (status: string) => {
 	}
 };
 
+const getStatusFormatting = (status: { label: string; id: string }) => {
+	switch (status.id) {
+		case "pending":
+			return (
+				<StatusButton
+					agentStatus={status.label}
+					textColor={"text-[#4A5568]"}
+					bgColor={"bg-[#EDF2F7]"}
+				/>
+			);
+		case "escalated":
+			return (
+				<StatusButton
+					agentStatus={status.label}
+					textColor={"text-[#E53E3E]"}
+					bgColor={"bg-[#FFF5F5]"}
+				/>
+			);
+		case "work-in-progress":
+			return (
+				<StatusButton
+					agentStatus={status.label}
+					textColor={"text-[#4A5568]"}
+					bgColor={"bg-[#EDF2F7]"}
+				/>
+			);
+		case "completed":
+			return (
+				<StatusButton
+					agentStatus={status.label}
+					textColor={"text-[#22543D]"}
+					bgColor={"bg-[#C6F6D5]"}
+				/>
+			);
+		case "scheduled":
+			return (
+				<StatusButton
+					agentStatus={status.label}
+					textColor={"text-[#2B6CB0]"}
+					bgColor={"bg-[#EBF8FF]"}
+				/>
+			);
+		case "cancelled":
+			return (
+				<StatusButton
+					agentStatus={status.label}
+					textColor={"text-[#DD6B20]"}
+					bgColor={"bg-[#FFFAF0]"}
+				/>
+			);
+		default:
+			return (
+				<StatusButton
+					agentStatus={status.label}
+					textColor={"text-[#4A5568]"}
+					bgColor={"bg-[#EDF2F7]"}
+				/>
+			);
+	}
+};
 const Table = (props: any) => {
+	const dispatch = useDispatch<AppDispatch>();
+	const patients = useSelector((state: RootState) => state.patients.patients);
+
+	useEffect(() => {
+		dispatch(fetchPatients());
+	}, [dispatch]);
 	const {
 		isTableMinimised,
 		setIsTableMinimised,
@@ -770,11 +342,10 @@ const Table = (props: any) => {
 					header: "Agent Status",
 					cell: (info) => (
 						<div className="py-[8px] px-[24px]">
-							<div className="flex justify-center items-center bg-[#FFF5F5] h-[20px] rounded-[6px]">
-								<h6 className="text-[#E53E3E] text-small font-semibold leading-4">
-									{info.getValue().agentStatus}
-								</h6>
-							</div>
+							{getStatusFormatting({
+								id: info.getValue().agentStatusId,
+								label: info.getValue().agentStatus,
+							})}
 						</div>
 					),
 				},
@@ -783,11 +354,10 @@ const Table = (props: any) => {
 					header: "Patient Status",
 					cell: (info) => (
 						<div className="py-[8px] px-[24px]">
-							<div className="bg-[#EDF2F7] flex justify-center items-center h-[20px] rounded-[6px]">
-								<h6 className=" text-[#4A5568] text-small font-semibold leading-4">
-									{info.getValue().patientStatus}
-								</h6>
-							</div>
+							{getStatusFormatting({
+								id: info.getValue().patientStatusId,
+								label: info.getValue().patientStatus,
+							})}
 						</div>
 					),
 				},
@@ -807,7 +377,7 @@ const Table = (props: any) => {
 						const rowIndex = info.row.index;
 						return (
 							<div
-								className="flex flex-row pt-[20px] pb-[19px] pl-[20px] w-full items-center cursor-pointer"
+								className="flex flex-row pt-[20px] pb-[19px] pl-[10px] w-full items-center cursor-pointer"
 								onClick={() => handleCellClick(rowData, rowIndex)}
 							>
 								<ProfilePlaceholder />
@@ -865,7 +435,7 @@ const Table = (props: any) => {
 	];
 	let columns = isTableMinimised ? minimisedColumns : maxcolumns;
 	const table = useReactTable({
-		data,
+		data: patients,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 	});
@@ -873,15 +443,15 @@ const Table = (props: any) => {
 	return (
 		<div
 			className={`${
-				isTableMinimised ? "w-[445px]" : "min-w-full"
-			} border-r border-[#E2E8F0]`}
+				isTableMinimised ? "w-[444px]" : "min-w-full"
+			} border-r border-[#E2E8F0] max-h-full  overflow-y-scroll`}
 		>
 			<table
 				className={`${
 					isTableMinimised ? "w-[444px]" : "min-w-full"
-				} border-collapse divide-y divide-solid divide-[#EBEBEB]`}
+				} border-collapse divide-y divide-solid divide-[#EBEBEB] max-h-full`}
 			>
-				<thead className="h-[45px]">
+				<thead className="h-[45px] sticky top-0 bg-white z-[10]">
 					{table
 						.getHeaderGroups()
 						.slice(1) // Skip the first header group

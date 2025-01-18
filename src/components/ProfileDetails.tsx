@@ -1,5 +1,4 @@
 import React from "react";
-import { ReactComponent as Profile } from "../assets/icons/Profile.svg";
 // import { ReactComponent as I } from "../assets/icons/I.svg";
 import { ReactComponent as Waiting } from "../assets/icons/Waiting.svg";
 import { ReactComponent as WaitingIcon } from "../assets/icons/WaitingIcon.svg";
@@ -19,7 +18,7 @@ import { ReactComponent as Escalation } from "../assets/icons/Escalation.svg";
 const ProfileDetails = (props: any) => {
 	let { activePatient } = props;
 	return (
-		<div className="h-full px-[24px] py-[24px]">
+		<div className="h-full px-[24px] py-[24px] max-h-full overflow-y-scroll">
 			<div className="flex flex-row w-[859px] h-[169px] bg-secondary rounded-[8px] p-6">
 				<div className="h-[120px] min-w-[120px]">
 					{/* <Profile height="100%" width="100%" /> */}
@@ -110,7 +109,7 @@ const ProfileDetails = (props: any) => {
 					</div>
 				</div>
 			</div>
-			<div className="mt-[50px] w-full pr-[86px]">
+			<div className="mt-[50px] w-full h-full pr-[86px]">
 				<div className="w-full flex flex-row items-center justify-between pb-[25px]">
 					<div className="flex flex-row items-center w-full h-full gap-x-[16px]">
 						<div className="h-full">
