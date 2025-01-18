@@ -21,6 +21,7 @@ const Header = (props: any) => {
 	return (
 		<div className="flex-none sticky top-0 h-[76px] bg-[#F1F4FB] flex items-center justify-between py-4 z-20">
 			<div
+				className="cursor-pointer"
 				onClick={() => {
 					navigate("/");
 				}}
@@ -30,7 +31,7 @@ const Header = (props: any) => {
 			<div className="flex flex-row justify-center items-center h-[42px] gap-x-[10px]">
 				{navItems.map((item, index) => (
 					<div
-						className={`flex justify-center items-center py-4 px-6 rounded-full  ${
+						className={`flex justify-center items-center py-4 px-6 rounded-full cursor-pointer  ${
 							location.pathname === item.path
 								? "bg-[#009CBD] text-white"
 								: "bg-white"
