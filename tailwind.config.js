@@ -3,6 +3,9 @@ module.exports = {
 	content: ["./src/**/*.{js,jsx,ts,tsx}"],
 	theme: {
 		extend: {},
+		backgroundImage: {
+			"hero-pattern": "url('/src/assets/images/hero.png')",
+		},
 		colors: {
 			primary: "#0078B3",
 			primaryText: "#003B71",
@@ -16,6 +19,7 @@ module.exports = {
 			gray: "#718096",
 			gray800: "#1A202C",
 			red800: "#B11116",
+			"blue-100": "#F1F4FB",
 		},
 		fontSize: {
 			small: "12px",

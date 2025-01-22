@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 // import tableReducer from "./reducers/tableReducer";
 import patientReducer from "./redux/slices/patientSlice";
+import authReducer from "./redux/slices/authSlice";
 
 const store = configureStore({
 	reducer: {
 		patients: patientReducer,
+		auth: authReducer,
 	},
 });
 

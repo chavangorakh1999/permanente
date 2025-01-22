@@ -2,6 +2,8 @@ import React, { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import DashboardLayout from "../layouts/Dashboard";
 import PATHS from "./paths";
+import SignIn from "../screens/SignIn";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 // Lazy load pages
 const Dashboard = lazy(() => import("../screens/Dashboard"));
@@ -9,54 +11,46 @@ const AIAgents = lazy(() => import("../screens/AiAgent"));
 const Reports = lazy(() => import("../screens/Reports"));
 const Rules = lazy(() => import("../screens/Rules"));
 
+const NotFound = () => <div>404 - Page Not Found</div>; // Simple 404 Component
+
 const AppRoutes = () => {
+	const isAuthenticated = false; // Replace with your actual authentication logic
+
 	return (
-		<Routes>
-			<Route element={<DashboardLayout />}>
-				{/* Redirect root to dashboard */}
+		<Suspense fallback={<div>Loading...</div>}>
+			<Routes>
+				{/* Public Route */}
+				<Route path={PATHS.SIGN_IN} element={<SignIn />} />
+
+				{/* Protected Routes */}
+				<Route
+					element={
+						<ProtectedRoute isAuthenticated={isAuthenticated}>
+							<DashboardLayout />
+						</ProtectedRoute>
+					}
+				>
+					<Route path={PATHS.DASHBOARD} element={<Dashboard />} />
+					<Route path={PATHS.AI_AGENTS} element={<AIAgents />} />
+					<Route path={PATHS.REPORTS} element={<Reports />} />
+					<Route path={PATHS.RULES} element={<Rules />} />
+				</Route>
+
+				{/* Redirect root */}
 				<Route
 					path={PATHS.ROOT}
-					element={<Navigate to={PATHS.DASHBOARD} replace />}
-				/>
-
-				{/* Main routes */}
-				<Route
-					path={PATHS.DASHBOARD}
 					element={
-						<Suspense fallback={<div>Loading...</div>}>
-							<Dashboard />
-						</Suspense>
-					}
-				/>
-				<Route
-					path={PATHS.AI_AGENTS}
-					element={
-						<Suspense fallback={<div>Loading...</div>}>
-							<AIAgents />
-						</Suspense>
-					}
-				/>
-				<Route
-					path={PATHS.REPORTS}
-					element={
-						<Suspense fallback={<div>Loading...</div>}>
-							<Reports />
-						</Suspense>
-					}
-				/>
-				<Route
-					path={PATHS.RULES}
-					element={
-						<Suspense fallback={<div>Loading...</div>}>
-							<Rules />
-						</Suspense>
+						<Navigate
+							to={isAuthenticated ? PATHS.DASHBOARD : PATHS.SIGN_IN}
+							replace
+						/>
 					}
 				/>
 
 				{/* 404 route */}
-				<Route path="*" element={<Navigate to={PATHS.DASHBOARD} replace />} />
-			</Route>
-		</Routes>
+				<Route path="*" element={<NotFound />} />
+			</Routes>
+		</Suspense>
 	);
 };
 

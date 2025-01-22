@@ -7,6 +7,7 @@ import { ReactComponent as Info } from "../assets/icons/Info.svg";
 import { ReactComponent as Bell } from "../assets/icons/Bell.svg";
 import { ReactComponent as DownArrow } from "../assets/icons/DownArrow.svg";
 import { ReactComponent as Profile } from "../assets/icons/Profile.svg";
+import { globalColors } from "../utils/colors";
 
 const Header = (props: any) => {
 	const location = useLocation();
@@ -19,7 +20,7 @@ const Header = (props: any) => {
 	];
 
 	return (
-		<div className="flex-none sticky top-0 h-[76px] bg-[#F1F4FB] flex items-center justify-between py-4 z-20">
+		<div className="flex-none sticky top-0 h-[76px] bg-blue-100 flex items-center justify-between py-4 z-20">
 			<div
 				className="cursor-pointer"
 				onClick={() => {
@@ -33,7 +34,7 @@ const Header = (props: any) => {
 					<div
 						className={`flex justify-center items-center py-4 px-6 rounded-full cursor-pointer  ${
 							location.pathname === item.path
-								? "bg-[#009CBD] text-white"
+								? `${globalColors.secondaryBg} text-white`
 								: "bg-white"
 						}`}
 						onClick={() => {

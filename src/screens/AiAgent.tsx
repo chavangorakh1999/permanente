@@ -3,6 +3,7 @@ import CountCard from "../components/CountCard";
 import { ReactComponent as People } from "../assets/icons/People.svg";
 import Table from "../components/Table";
 import ProfileDetails from "../components/ProfileDetails";
+import { globalColors } from "../utils/colors";
 const AiAgent = () => {
 	//Mainting State for Table
 	const [isTableMinimised, setIsTableMinimised] = useState(false);
@@ -15,13 +16,13 @@ const AiAgent = () => {
 					<CountCard
 						Title="Total Agents"
 						Count="108"
-						Icon={<People fill="#009CBD" />}
+						Icon={<People fill={globalColors.secondaryColor} />}
 						BgColor="bg-secondary"
 					/>
 					<CountCard
 						Title="Confirmed"
 						Count="72"
-						Icon={<People fill="#25855A" />}
+						Icon={<People fill={globalColors.lightGreenBg} />}
 						BgColor="bg-lightGreen"
 					/>
 					<CountCard
