@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import DashboardLayout from "../layouts/Dashboard";
 import PATHS from "./paths";
@@ -14,13 +14,16 @@ const Rules = lazy(() => import("../screens/Rules"));
 const NotFound = () => <div>404 - Page Not Found</div>; // Simple 404 Component
 
 const AppRoutes = () => {
-	const isAuthenticated = false; // Replace with your actual authentication logic
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 	return (
 		<Suspense fallback={<div>Loading...</div>}>
 			<Routes>
 				{/* Public Route */}
-				<Route path={PATHS.SIGN_IN} element={<SignIn />} />
+				<Route
+					path={PATHS.SIGN_IN}
+					element={<SignIn setIsAuthenticated={setIsAuthenticated} />}
+				/>
 
 				{/* Protected Routes */}
 				<Route
@@ -31,6 +34,7 @@ const AppRoutes = () => {
 					}
 				>
 					<Route path={PATHS.DASHBOARD} element={<Dashboard />} />
+					<Route path={PATHS.PATIENTS} element={<AIAgents />} />
 					<Route path={PATHS.AI_AGENTS} element={<AIAgents />} />
 					<Route path={PATHS.REPORTS} element={<Reports />} />
 					<Route path={PATHS.RULES} element={<Rules />} />

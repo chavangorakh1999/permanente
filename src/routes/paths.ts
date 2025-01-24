@@ -1,6 +1,7 @@
 const PATHS = {
 	ROOT: "/",
 	DASHBOARD: "/dashboard",
+	PATIENTS: "/patients",
 	AI_AGENTS: "/ai-agents",
 	REPORTS: "/reports",
 	RULES: "/rules",

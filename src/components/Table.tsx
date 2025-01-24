@@ -125,6 +125,7 @@ const Table = (props: any) => {
 		setActivePatient,
 		setSelectedRow,
 		selectedRow,
+		escalated = false,
 	} = props;
 
 	const handleCellClick = (rowData: Patient, index: number) => {
@@ -433,7 +434,79 @@ const Table = (props: any) => {
 			],
 		},
 	];
-	let columns = isTableMinimised ? minimisedColumns : maxcolumns;
+
+	const escalationColumns: ColumnDef<Patient>[] = [
+		{
+			header: "Active Agents", // Group Header
+			columns: [
+				{
+					accessorKey: "patientId",
+					header: "Patient Details",
+					cell: (info) => {
+						const rowData = info.row.original;
+						const rowIndex = info.row.index;
+						return (
+							<div className="flex flex-row pt-[20px] pb-[19px] pl-[10px] w-full items-center cursor-pointer">
+								<ProfilePlaceholder />
+								<div className="flex flex-col pl-[10px]">
+									<h5 className="text-large font-semibold">{rowData.name}</h5>
+									<span
+										className={`text-small font-light ${
+											selectedRow === rowIndex ? "text-white" : "text-[#718096]"
+										}`}
+									>{`${rowData.age}, ${rowData.gender}, MRN#${rowData.mrn}`}</span>
+								</div>
+							</div>
+						);
+					},
+				},
+				{
+					accessorKey: "risk",
+					header: "Risk",
+					cell: (info) => {
+						const rowData = info.row.original;
+						return (
+							<div className="px-4 py-5">
+								<h5 className="text-large font-semibold">
+									{`${rowData.risk ?? ""}`}
+								</h5>
+							</div>
+						);
+					},
+				},
+				{
+					accessorKey: "aptDate",
+					header: "Apt Date",
+					cell: (info) => {
+						const rowData = info.row.original;
+						return (
+							<div className="">
+								<div className="flex flex-col">
+									<h5 className="text-large font-semibold">
+										{rowData.aptDate}
+									</h5>
+									<span
+										className={`text-small font-light ${
+											selectedRow === info.row.index
+												? "text-white"
+												: "text-[#718096]"
+										}`}
+									>
+										${rowData.aptTime}
+									</span>
+								</div>
+							</div>
+						);
+					},
+				},
+			],
+		},
+	];
+	let columns = escalated
+		? escalationColumns
+		: isTableMinimised
+		? minimisedColumns
+		: maxcolumns;
 	const table = useReactTable({
 		data: patients,
 		columns,
@@ -444,14 +517,20 @@ const Table = (props: any) => {
 		<div
 			className={`${
 				isTableMinimised ? "w-[444px]" : "min-w-full"
-			} border-r border-[#E2E8F0] max-h-full  overflow-y-scroll`}
+			} border-r border-[#E2E8F0] max-h-full ${
+				!escalated ? "overflow-y-scroll" : ""
+			}`}
 		>
 			<table
 				className={`${
 					isTableMinimised ? "w-[444px]" : "min-w-full"
 				} border-collapse divide-y divide-solid divide-[#EBEBEB] max-h-full`}
 			>
-				<thead className="h-[45px] sticky top-0 bg-white z-[10]">
+				<thead
+					className={`h-[45px] sticky top-0  z-[10] ${
+						escalated ? "bg-primary" : "bg-white"
+					}`}
+				>
 					{table
 						.getHeaderGroups()
 						.slice(1) // Skip the first header group
@@ -468,7 +547,9 @@ const Table = (props: any) => {
 										<th
 											key={header.id}
 											colSpan={header.colSpan}
-											className="text-normal font-semibold text-gray800 px-3 pb-1 pl-5 text-left"
+											className={`text-normal font-semibold ${
+												escalated ? "text-white" : "text-gray800"
+											} px-3 pb-1 pl-5 text-left`}
 										>
 											{header.isPlaceholder
 												? null

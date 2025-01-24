@@ -1,7 +1,15 @@
 import React from "react";
 import { ReactComponent as WhiteLogo } from "../assets/icons/WhiteLogo.svg";
+import { useNavigate } from "react-router-dom";
 
-function SignIn() {
+function SignIn(props: any) {
+	const { setIsAuthenticated } = props;
+	const navigate = useNavigate();
+	const handleSignIn = () => {
+		console.log("Sign in");
+		setIsAuthenticated(true);
+		navigate("/dashboard");
+	};
 	return (
 		<div className="h-screen w-full flex justify-center items-center bg-hero-pattern bg-cover">
 			<div className="h-[520px] w-[495px] ml-[817px] mt-[145px] flex flex-col items-center">
@@ -52,7 +60,10 @@ function SignIn() {
 									<span className="text-[#006CA6]">Forgot password?</span>
 								</div>
 							</div>
-							<div className="h-[56px] w-full rounded-sm bg-[#006CA6] flex justify-center items-center cursor-pointer">
+							<div
+								className="h-[56px] w-full rounded-sm bg-[#006CA6] flex justify-center items-center cursor-pointer"
+								onClick={handleSignIn}
+							>
 								<span className="text-white text-base font-normal">
 									Sign in
 								</span>

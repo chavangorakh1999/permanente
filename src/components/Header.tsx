@@ -14,6 +14,7 @@ const Header = (props: any) => {
 	const navigate = useNavigate();
 	const navItems = [
 		{ path: PATHS.DASHBOARD, label: "Dashboard" },
+		{ path: PATHS.PATIENTS, label: "Patients" },
 		{ path: PATHS.AI_AGENTS, label: "AI Agents" },
 		{ path: PATHS.REPORTS, label: "Reports" },
 		{ path: PATHS.RULES, label: "Rules" },
@@ -32,6 +33,7 @@ const Header = (props: any) => {
 			<div className="flex flex-row justify-center items-center h-[42px] gap-x-[10px]">
 				{navItems.map((item, index) => (
 					<div
+						key={index}
 						className={`flex justify-center items-center py-4 px-6 rounded-full cursor-pointer  ${
 							location.pathname === item.path
 								? `${globalColors.secondaryBg} text-white`
