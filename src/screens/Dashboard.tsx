@@ -9,11 +9,10 @@ import { ReactComponent as CanceledIcon } from "../assets/icons/CanceledIcon.svg
 import BarChartComponent from "../components/BarChart";
 import PieChartContainer from "../components/PieChart";
 
-
 const Dashboard = () => {
 	const navigate = useNavigate();
 	return (
-		<div className="h-full w-full flex flex-row justify-between mt-[37px] no-scrollbar overflow-y-scroll">
+		<div className="h-full w-full flex flex-row justify-between pt-[37px] no-scrollbar overflow-y-scroll">
 			<div className="w-[430px] h-full flex flex-col">
 				<div className="mb-[32px]">
 					<h4 className="mb-6 text-xl font-light text-tertiaryText">
@@ -95,7 +94,12 @@ const Dashboard = () => {
 						<Table escalated={true} />
 					</div>
 				</div>
-				<div className="min-h-[32px] w-full bg-white flex justify-center items-center border-t border-t-[#CBD5E0] cursor-pointer" onClick={() => {navigate("/patients")}}>
+				<div
+					className="min-h-[32px] w-full bg-white flex justify-center items-center border-t border-t-[#CBD5E0] cursor-pointer"
+					onClick={() => {
+						navigate("/patients");
+					}}
+				>
 					<span className="text-primary">View All</span>
 				</div>
 			</div>

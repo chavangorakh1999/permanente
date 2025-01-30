@@ -16,7 +16,7 @@ const Patients = lazy(() => import("../screens/Patients"));
 const NotFound = () => <div>404 - Page Not Found</div>; // Simple 404 Component
 
 const AppRoutes = () => {
-	const [isAuthenticated, setIsAuthenticated] = useState(true);
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 	return (
 		<Suspense fallback={<StatsSkeleton />}>

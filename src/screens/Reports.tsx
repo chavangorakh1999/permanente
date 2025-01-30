@@ -6,7 +6,7 @@ import SectionPieChart from "../components/SectionPieChart";
 
 const Reports = () => {
 	return (
-		<div className="h-full flex flex-col overflow-y-scroll no-scrollbar mt-[37px]">
+		<div className="h-full flex flex-col overflow-y-scroll no-scrollbar pt-[37px]">
 			<div className="flex flex-row justify-between w-full">
 				<div className="mb-[32px]">
 					<h4 className="mb-6 text-xl font-light text-tertiaryText">
