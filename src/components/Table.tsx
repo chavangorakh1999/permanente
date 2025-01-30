@@ -6,7 +6,7 @@ import {
 	ColumnDef,
 } from "@tanstack/react-table";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPatients } from "../redux/actions/patientActions";
+import { fetchPatients } from "../redux/slices/patientSlice";
 import { RootState, AppDispatch } from "../store";
 import { ReactComponent as Success } from "../assets/icons/Success.svg";
 import { ReactComponent as Failed } from "../assets/icons/Failed.svg";
@@ -518,7 +518,7 @@ const Table = (props: any) => {
 			className={`${
 				isTableMinimised ? "w-[444px]" : "min-w-full"
 			} border-r border-[#E2E8F0] max-h-full ${
-				!escalated ? "overflow-y-scroll" : ""
+				!escalated ? "overflow-y-scroll no-scrollbar" : ""
 			}`}
 		>
 			<table

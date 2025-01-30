@@ -4,6 +4,8 @@ import { ReactComponent as People } from "../assets/icons/People.svg";
 import Table from "../components/Table";
 import ProfileDetails from "../components/ProfileDetails";
 import { globalColors } from "../utils/colors";
+import { motion } from "motion/react";
+import { SlideUp } from "../animations/SlideUp";
 const AiAgent = () => {
 	//Mainting State for Table
 	const [isTableMinimised, setIsTableMinimised] = useState(false);
@@ -11,7 +13,13 @@ const AiAgent = () => {
 	const [activeTab, setActiveTab] = useState("active");
 	const [selectedRow, setSelectedRow] = useState<number | null>(null);
 	return (
-		<div className="h-full">
+		<motion.div
+			className="h-full"
+			variants={SlideUp}
+			initial="hidden"
+			transition={{ duration: 0.5 }}
+			animate="visible"
+		>
 			{!isTableMinimised && (
 				<div className="flex flex-row pt-[22px] gap-x-[25px]">
 					<CountCard
@@ -105,7 +113,7 @@ const AiAgent = () => {
 					/>
 				)}
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

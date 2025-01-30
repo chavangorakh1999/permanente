@@ -8,11 +8,19 @@ import { ReactComponent as FailedIcon } from "../assets/icons/FailedIcon.svg";
 import { ReactComponent as CanceledIcon } from "../assets/icons/CanceledIcon.svg";
 import BarChartComponent from "../components/BarChart";
 import PieChartContainer from "../components/PieChart";
+import { motion } from "motion/react";
+import { SlideUp } from "../animations/SlideUp";
 
 const Dashboard = () => {
 	const navigate = useNavigate();
 	return (
-		<div className="h-full w-full flex flex-row justify-between pt-[37px] no-scrollbar overflow-y-scroll">
+		<motion.div
+			className="h-full w-full flex flex-row justify-between pt-[37px] no-scrollbar overflow-y-scroll"
+			variants={SlideUp}
+			initial="hidden"
+			transition={{ duration: 0.5 }}
+			animate="visible"
+		>
 			<div className="w-[430px] h-full flex flex-col">
 				<div className="mb-[32px]">
 					<h4 className="mb-6 text-xl font-light text-tertiaryText">
@@ -123,7 +131,7 @@ const Dashboard = () => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

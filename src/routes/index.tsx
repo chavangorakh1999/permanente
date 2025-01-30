@@ -1,10 +1,12 @@
-import React, { Suspense, lazy, useState } from "react";
+import React, { Suspense, lazy } from "react";
+import { RootState } from "../store";
 import { Routes, Route, Navigate } from "react-router-dom";
 import DashboardLayout from "../layouts/Dashboard";
 import PATHS from "./paths";
 import SignIn from "../screens/SignIn";
 import ProtectedRoute from "../components/ProtectedRoute";
 import StatsSkeleton from "../components/StatsSkeleton";
+import { useSelector } from "react-redux";
 
 // Lazy load pages
 const Dashboard = lazy(() => import("../screens/Dashboard"));
@@ -16,16 +18,14 @@ const Patients = lazy(() => import("../screens/Patients"));
 const NotFound = () => <div>404 - Page Not Found</div>; // Simple 404 Component
 
 const AppRoutes = () => {
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+	const isAuthenticated = useSelector(
+		(state: RootState) => state.auth.isAuthenticated
+	);
 	return (
 		<Suspense fallback={<StatsSkeleton />}>
 			<Routes>
 				{/* Public Route */}
-				<Route
-					path={PATHS.SIGN_IN}
-					element={<SignIn setIsAuthenticated={setIsAuthenticated} />}
-				/>
+				<Route path={PATHS.SIGN_IN} element={<SignIn />} />
 
 				{/* Protected Routes */}
 				<Route

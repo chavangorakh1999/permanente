@@ -3,10 +3,18 @@ import ProcessStatsChart from "../components/ProcessStatsChart";
 import BarChartComponent from "../components/BarChart";
 import SingleLineChart from "../components/SingleLineChart";
 import SectionPieChart from "../components/SectionPieChart";
+import { motion } from "motion/react";
+import { SlideUp } from "../animations/SlideUp";
 
 const Reports = () => {
 	return (
-		<div className="h-full flex flex-col overflow-y-scroll no-scrollbar pt-[37px]">
+		<motion.div
+			className="h-full flex flex-col overflow-y-scroll no-scrollbar pt-[37px]"
+			variants={SlideUp}
+			initial="hidden"
+			transition={{ duration: 0.5 }}
+			animate="visible"
+		>
 			<div className="flex flex-row justify-between w-full">
 				<div className="mb-[32px]">
 					<h4 className="mb-6 text-xl font-light text-tertiaryText">
@@ -39,7 +47,7 @@ const Reports = () => {
 					<SectionPieChart />
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

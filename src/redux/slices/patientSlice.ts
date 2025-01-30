@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Patient } from "../../types/patient";
-import * as actionTypes from "../actionTypes/actionTypes";
+import * as actionTypes from "../actionTypes/patientActionTypes";
 
-const API_URL = "https://api.example.com/patients";
+const API_URL = "https://678b6e2a1a6b89b27a2a59b7.mockapi.io/api";
 
 export const fetchPatients = createAsyncThunk<Patient[]>(
 	actionTypes.FETCH_PATIENTS,
 	async () => {
-		const response = await axios.get(API_URL);
+		const response = await axios.get(`${API_URL}/fetchPatientsListing`);
 		return response.data;
 	}
 );

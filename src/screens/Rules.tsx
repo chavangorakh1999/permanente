@@ -2,9 +2,18 @@ import React from "react";
 import { ReactComponent as ArrowsClockCircle } from "../assets/icons/ArrowsClockCircle.svg";
 import { ReactComponent as Mobile } from "../assets/icons/Mobile.svg";
 import { ReactComponent as Email } from "../assets/icons/Email.svg";
+import { motion } from "motion/react";
+import { SlideUp } from "../animations/SlideUp";
+
 const Rules = () => {
 	return (
-		<div className="w-full h-full flex flex-row overflow-y-scroll no-scrollbar pt-[37px]">
+		<motion.div
+			className="w-full h-full flex flex-row overflow-y-scroll no-scrollbar pt-[37px]"
+			variants={SlideUp}
+			initial="hidden"
+			transition={{ duration: 0.5 }}
+			animate="visible"
+		>
 			<div className="min-w-[300px] h-fit  mr-[10px] py-4 bg-white rounded-xl">
 				<div className="py-4 flex flex-row justify-start items-center px-6">
 					<div className="h-5 w-5 mr-3">
@@ -57,7 +66,7 @@ const Rules = () => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

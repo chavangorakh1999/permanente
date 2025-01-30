@@ -4,7 +4,8 @@ import "./index.css";
 import App from "./screens/App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
-import store from "./store";
+import { PersistGate } from "redux-persist/integration/react"; // Import PersistGate
+import { store, persistor } from "./store"; // Import persistor
 
 const root = ReactDOM.createRoot(
 	document.getElementById("root") as HTMLElement
@@ -12,7 +13,10 @@ const root = ReactDOM.createRoot(
 root.render(
 	<React.StrictMode>
 		<Provider store={store}>
-			<App />
+			{/* Wrap App with PersistGate to ensure state is rehydrated */}
+			<PersistGate loading={null} persistor={persistor}>
+				<App />
+			</PersistGate>
 		</Provider>
 	</React.StrictMode>
 );
