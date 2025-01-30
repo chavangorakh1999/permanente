@@ -1,18 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { ReactComponent as WhiteLogo } from "../assets/icons/WhiteLogo.svg";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 
 function SignIn(props: any) {
 	const { setIsAuthenticated } = props;
+	const [showPassword, setShowPassword] = useState(false);
 	const navigate = useNavigate();
+
+	const togglePassword = () => {
+		setShowPassword((prev) => !prev);
+	};
 	const handleSignIn = () => {
 		console.log("Sign in");
 		setIsAuthenticated(true);
 		navigate("/dashboard");
 	};
 	return (
-		<div className="h-screen w-full flex justify-center items-center bg-hero-pattern bg-cover">
-			<div className="h-[520px] w-[495px] ml-[817px] mt-[145px] flex flex-col items-center">
+		<div className="relative h-screen w-full flex justify-center items-center bg-hero-pattern bg-cover">
+			<div className="absolute h-[520px] w-[495px] left-[57%] top-[18%] flex flex-col items-center">
 				<div className="h-[20px] mb-[36px] w-[297px]">
 					<WhiteLogo />
 				</div>
@@ -36,15 +42,26 @@ function SignIn(props: any) {
 									className="block w-full rounded-sm bg-white p-4 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-[#B3BAC5] placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
 								/>
 							</div>
-							<div className="mb-[20px]">
+							<div className="relative mb-[20px] flex justify-center items-center">
 								<input
 									id="password"
 									name="password"
-									type="text"
+									type={showPassword ? "text" : "password"}
 									placeholder="Password"
 									required
 									className="block w-full rounded-sm bg-white p-4 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-[#B3BAC5] placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
 								/>
+								<button
+									type="button"
+									onClick={togglePassword}
+									className="absolute right-6  flex items-center text-gray-500 hover:text-gray-700"
+								>
+									{showPassword ? (
+										<EyeOff className="w-5 h-5 text-gray" />
+									) : (
+										<Eye className="w-5 h-5 text-gray" />
+									)}
+								</button>
 							</div>
 							<div className="flex flex-row justify-between">
 								<div className=" flex justify-start items-center mb-[40px]">

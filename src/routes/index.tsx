@@ -4,20 +4,22 @@ import DashboardLayout from "../layouts/Dashboard";
 import PATHS from "./paths";
 import SignIn from "../screens/SignIn";
 import ProtectedRoute from "../components/ProtectedRoute";
+import StatsSkeleton from "../components/StatsSkeleton";
 
 // Lazy load pages
 const Dashboard = lazy(() => import("../screens/Dashboard"));
 const AIAgents = lazy(() => import("../screens/AiAgent"));
 const Reports = lazy(() => import("../screens/Reports"));
 const Rules = lazy(() => import("../screens/Rules"));
+const Patients = lazy(() => import("../screens/Patients"));
 
 const NotFound = () => <div>404 - Page Not Found</div>; // Simple 404 Component
 
 const AppRoutes = () => {
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [isAuthenticated, setIsAuthenticated] = useState(true);
 
 	return (
-		<Suspense fallback={<div>Loading...</div>}>
+		<Suspense fallback={<StatsSkeleton />}>
 			<Routes>
 				{/* Public Route */}
 				<Route
@@ -34,7 +36,7 @@ const AppRoutes = () => {
 					}
 				>
 					<Route path={PATHS.DASHBOARD} element={<Dashboard />} />
-					<Route path={PATHS.PATIENTS} element={<AIAgents />} />
+					<Route path={PATHS.PATIENTS} element={<Patients />} />
 					<Route path={PATHS.AI_AGENTS} element={<AIAgents />} />
 					<Route path={PATHS.REPORTS} element={<Reports />} />
 					<Route path={PATHS.RULES} element={<Rules />} />

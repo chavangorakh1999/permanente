@@ -4,7 +4,7 @@ import { ReactComponent as People } from "../assets/icons/People.svg";
 import Table from "../components/Table";
 import ProfileDetails from "../components/ProfileDetails";
 import { globalColors } from "../utils/colors";
-const AiAgent = () => {
+const Patients = () => {
 	//Mainting State for Table
 	const [isTableMinimised, setIsTableMinimised] = useState(false);
 	const [activePatient, setActivePatient] = useState({});
@@ -109,4 +109,4 @@ const AiAgent = () => {
 	);
 };
 
-export default AiAgent;
+export default Patients;
