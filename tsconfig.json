@@ -2,6 +2,9 @@
 	"compilerOptions": {
 		"jsx": "react-jsx", // Required for React 17+ with JSX transform
 		"allowSyntheticDefaultImports": true,
+		"outDir": "dist-electron",
+		"types": ["node"],
+		"sourceMap": true,
 		/* Visit https://aka.ms/tsconfig to read more about this file */
 
 		/* Projects */
@@ -102,5 +105,11 @@
 		// "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
 		"skipLibCheck": true /* Skip type checking all .d.ts files. */
 	},
-	"include": ["**/*.ts", "**/*.tsx", "src/redux/actionTypes/actionTypes.js"]
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"src/redux/actionTypes/actionTypes.js",
+		"electron.js",
+		"src/electron/**/*.ts"
+	]
 }
