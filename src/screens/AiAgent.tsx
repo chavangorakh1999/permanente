@@ -101,6 +101,7 @@ const AiAgent = () => {
 				)}
 				<Table
 					isTableMinimised={isTableMinimised}
+					activeTab={activeTab}
 					setIsTableMinimised={setIsTableMinimised}
 					setActivePatient={setActivePatient}
 					selectedRow={selectedRow}

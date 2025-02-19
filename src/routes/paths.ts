@@ -6,6 +6,8 @@ const PATHS = {
 	REPORTS: "/reports",
 	RULES: "/rules",
 	SIGN_IN: "/sign-in",
+	UNAUTHORIZED: "/unauthorized",
+	APPOINTMENTS: "/appointments",
 } as const;
 
 export default PATHS;

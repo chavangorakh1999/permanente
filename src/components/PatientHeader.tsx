@@ -1,12 +1,11 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PATHS from "../routes/paths";
+import ProfilePopover from "./ProfilePopover";
 
 import { ReactComponent as LogoLg } from "../assets/icons/Logo.svg";
 import { ReactComponent as Info } from "../assets/icons/Info.svg";
 import { ReactComponent as Bell } from "../assets/icons/Bell.svg";
-import { ReactComponent as DownArrow } from "../assets/icons/DownArrow.svg";
-import { ReactComponent as Profile } from "../assets/icons/Profile.svg";
 import { globalColors } from "../utils/colors";
 
 const Header = (props: any) => {
@@ -14,10 +13,7 @@ const Header = (props: any) => {
 	const navigate = useNavigate();
 	const navItems = [
 		{ path: PATHS.DASHBOARD, label: "Dashboard" },
-		{ path: PATHS.PATIENTS, label: "Patients" },
-		{ path: PATHS.AI_AGENTS, label: "AI Agents" },
-		{ path: PATHS.REPORTS, label: "Reports" },
-		{ path: PATHS.RULES, label: "Rules" },
+		{ path: PATHS.APPOINTMENTS, label: "Appointments", disable: true },
 	];
 
 	return (
@@ -25,7 +21,7 @@ const Header = (props: any) => {
 			<div
 				className="cursor-pointer"
 				onClick={() => {
-					navigate("/");
+					navigate("/dashboard");
 				}}
 			>
 				<LogoLg />
@@ -40,7 +36,9 @@ const Header = (props: any) => {
 								: "bg-white"
 						}`}
 						onClick={() => {
-							navigate(item.path);
+							if (!item?.disable) {
+								navigate(item.path);
+							}
 						}}
 					>
 						<h2 className="font-normal text-normal">{item.label}</h2>
@@ -54,10 +52,7 @@ const Header = (props: any) => {
 				<div className="rounded-full h-full w-[42px] p-[9px] bg-white">
 					<Bell height="100%" width="100%" />
 				</div>
-				<div className="flex flex-row justify-center items-center rounded-full h-full pl-3 pr-1 py-[6px] bg-white gap-x-[9px]">
-					<DownArrow />
-					<Profile height="100%" width="100%" />
-				</div>
+				<ProfilePopover />
 			</div>
 		</div>
 	);

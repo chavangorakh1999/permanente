@@ -23,7 +23,13 @@ export interface Patient {
 	a6: string;
 	a7: string;
 	a8: string;
-	agentStatus: object;
-	patientStatus: object;
+	agentStatus: {
+		agentStatusId: string;
+		agentStatus: string;
+	};
+	patientStatus: {
+		patientStatusId: string;
+		patientStatus: string;
+	};
 	imageUrl: string;
 }

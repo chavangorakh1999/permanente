@@ -1,13 +1,44 @@
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { useSelector } from "react-redux";
+import { RootState } from "../store"; // adjust path as needed
 
-const data = [
-	{ name: "Group A", value: 400, bgColor: "bg-[#0088FE]", color: "#0088FE" },
-	{ name: "Group B", value: 300, bgColor: "bg-[#00C49F]", color: "#00C49F" },
-	{ name: "Group C", value: 300, bgColor: "bg-[#FFBB28]", color: "#FFBB28" },
-	{ name: "Group D", value: 200, bgColor: "bg-[#FF8042]", color: "#FF8042" },
-];
-const PieChartContainer = () => {
+const PieChartContainer: React.FC = () => {
+	// Get patients data from Redux store
+	const patients = useSelector((state: RootState) => state.patients.patients);
+
+	// Aggregate patients by patientStatus (if it's an object, extract the status string)
+	const aggregatedData = Object.values(
+		patients.reduce((acc, patient) => {
+			// If patientStatus is an object, extract its patientStatus property; otherwise, use it directly.
+			const status =
+				patient.patientStatus && typeof patient.patientStatus === "object"
+					? patient.patientStatus.patientStatus
+					: (patient.patientStatus as string) || "Unknown";
+			if (!acc[status]) {
+				acc[status] = { name: status, value: 0 };
+			}
+			acc[status].value += 1;
+			return acc;
+		}, {} as { [key: string]: { name: string; value: number } })
+	);
+
+	// Define a color mapping for each patient status
+	const colorMapping: Record<string, { bgColor: string; color: string }> = {
+		Confirmed: { bgColor: "bg-[#0088FE]", color: "#0088FE" },
+		Pending: { bgColor: "bg-[#00C49F]", color: "#00C49F" },
+		Rescheduled: { bgColor: "bg-[#FFBB28]", color: "#FFBB28" },
+		Cancelled: { bgColor: "bg-[#FF8042]", color: "#FF8042" },
+		Escalated: { bgColor: "bg-[#A020F0]", color: "#A020F0" },
+		Unknown: { bgColor: "bg-gray-400", color: "#ccc" },
+	};
+
+	// Map aggregated data to include colors
+	const data = aggregatedData.map((item) => {
+		const colors = colorMapping[item.name] || colorMapping.Unknown;
+		return { ...item, bgColor: colors.bgColor, color: colors.color };
+	});
+
 	return (
 		<div className="bg-white px-[30px] py-[40px] rounded-lg shadow-md w-full h-full flex justify-start items-center">
 			<ResponsiveContainer width="70%" height="100%">
@@ -26,7 +57,7 @@ const PieChartContainer = () => {
 					</Pie>
 				</PieChart>
 			</ResponsiveContainer>
-			<div className="flex flex-col w-[30%] h-full justify-center space-y-3">
+			<div className="flex flex-col w-[30%] h-full justify-center items-start space-y-3">
 				{data.map((item, index) => (
 					<span
 						key={index}
@@ -36,7 +67,9 @@ const PieChartContainer = () => {
 							className={`${item.bgColor} rounded-full h-2 w-2 mr-2`}
 						></span>
 						<span className="font-light text-small mr-[12px]">{item.name}</span>
-						<span className="font-light text-small">{item.value}</span>
+						<span className="font-light text-small justify-end">
+							{item.value}
+						</span>
 					</span>
 				))}
 			</div>

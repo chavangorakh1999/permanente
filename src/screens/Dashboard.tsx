@@ -105,7 +105,7 @@ const Dashboard = () => {
 				<div
 					className="min-h-[32px] w-full bg-white flex justify-center items-center border-t border-t-[#CBD5E0] cursor-pointer"
 					onClick={() => {
-						navigate("/patients");
+						navigate("/patients", { state: { sortBy: "escalated" } });
 					}}
 				>
 					<span className="text-primary">View All</span>

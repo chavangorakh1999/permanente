@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const Dropdown = (props: any) => {
-	const { selectedTimeframe, setSelectedTimeframe } = props;
+	const { selectedTimeframe, setSelectedTimeframe, className = "" } = props;
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 	const [selectedOption, setSelectedOption] = useState(selectedTimeframe);
@@ -37,11 +37,11 @@ const Dropdown = (props: any) => {
 			{/* Dropdown Button */}
 			<button
 				onClick={toggleDropdown}
-				className="flex items-center px-2 py-1 text-normal font-medium text-[#000000] bg-gray800 bg-opacity-10 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+				className={`flex items-center px-2 py-1 h-full w-full text-normal font-medium text-[#000000] bg-gray800 bg-opacity-10 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 ${className}`}
 			>
 				{selectedOption}
 				<svg
-					className="w-4 h-4 ml-2"
+					className="w-4 h-4 ml-auto"
 					xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 20 20"
 					fill="currentColor"

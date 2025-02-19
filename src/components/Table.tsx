@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	useReactTable,
 	getCoreRowModel,
+	getSortedRowModel,
 	flexRender,
 	ColumnDef,
+	SortingState,
 } from "@tanstack/react-table";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPatients } from "../redux/slices/patientSlice";
@@ -115,18 +117,21 @@ const getStatusFormatting = (status: { label: string; id: string }) => {
 const Table = (props: any) => {
 	const dispatch = useDispatch<AppDispatch>();
 	const patients = useSelector((state: RootState) => state.patients.patients);
-
-	useEffect(() => {
-		dispatch(fetchPatients());
-	}, [dispatch]);
+	const [sorting, setSorting] = useState<SortingState>([
+		{ id: "agentStatus", desc: false },
+	]);
 	const {
 		isTableMinimised,
 		setIsTableMinimised,
 		setActivePatient,
 		setSelectedRow,
 		selectedRow,
+		activeTab,
 		escalated = false,
 	} = props;
+	useEffect(() => {
+		dispatch(fetchPatients());
+	}, [dispatch, activeTab]);
 
 	const handleCellClick = (rowData: Patient, index: number) => {
 		console.log(rowData);
@@ -341,11 +346,31 @@ const Table = (props: any) => {
 				{
 					accessorKey: "agentStatus",
 					header: "Agent Status",
+					enableSorting: activeTab === "completed" ? true : false,
+					sortingFn: (rowA, rowB, columnId) => {
+						// Assert the type of the returned value
+						const valueA = rowA.getValue(columnId) as
+							| { agentStatus: string }
+							| undefined;
+						const valueB = rowB.getValue(columnId) as
+							| { agentStatus: string }
+							| undefined;
+
+						const statusA = valueA?.agentStatus || "";
+						const statusB = valueB?.agentStatus || "";
+
+						// Custom sorting: 'Completed' comes first
+						if (statusA === "Completed" && statusB !== "Completed") return -1;
+						if (statusA !== "Completed" && statusB === "Completed") return 1;
+
+						return statusA.localeCompare(statusB);
+					},
+
 					cell: (info) => (
 						<div className="py-[8px] px-[24px]">
 							{getStatusFormatting({
-								id: info.getValue().agentStatusId,
-								label: info.getValue().agentStatus,
+								id: info.getValue()?.agentStatusId,
+								label: info.getValue()?.agentStatus,
 							})}
 						</div>
 					),
@@ -356,8 +381,8 @@ const Table = (props: any) => {
 					cell: (info) => (
 						<div className="py-[8px] px-[24px]">
 							{getStatusFormatting({
-								id: info.getValue().patientStatusId,
-								label: info.getValue().patientStatus,
+								id: info.getValue()?.patientStatusId,
+								label: info.getValue()?.patientStatus,
 							})}
 						</div>
 					),
@@ -509,6 +534,11 @@ const Table = (props: any) => {
 		: maxcolumns;
 	const table = useReactTable({
 		data: patients,
+		state: {
+			sorting,
+		},
+		onSortingChange: setSorting,
+		getSortedRowModel: getSortedRowModel(),
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 	});

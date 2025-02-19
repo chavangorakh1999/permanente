@@ -6,12 +6,14 @@ import ProfileDetails from "../components/ProfileDetails";
 import { globalColors } from "../utils/colors";
 import { motion } from "motion/react";
 import { SlideUp } from "../animations/SlideUp";
+import { useLocation } from "react-router-dom";
 const Patients = () => {
 	//Mainting State for Table
 	const [isTableMinimised, setIsTableMinimised] = useState(false);
 	const [activePatient, setActivePatient] = useState({});
 	const [activeTab, setActiveTab] = useState("active");
 	const [selectedRow, setSelectedRow] = useState<number | null>(null);
+	const { state } = useLocation();
 
 	return (
 		<motion.div
@@ -24,7 +26,7 @@ const Patients = () => {
 			{!isTableMinimised && (
 				<div className="flex flex-row pt-[22px] gap-x-[25px]">
 					<CountCard
-						Title="Total Agents"
+						Title="Total Patients"
 						Count="108"
 						Icon={<People fill={globalColors.secondaryColor} />}
 						BgColor="bg-secondary"
@@ -102,9 +104,11 @@ const Patients = () => {
 				)}
 				<Table
 					isTableMinimised={isTableMinimised}
+					activeTab={activeTab}
 					setIsTableMinimised={setIsTableMinimised}
 					setActivePatient={setActivePatient}
 					selectedRow={selectedRow}
+					sortBy={state?.sortBy}
 					setSelectedRow={setSelectedRow}
 				/>
 				{isTableMinimised && (

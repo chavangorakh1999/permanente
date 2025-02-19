@@ -12,59 +12,84 @@ import {
 import Dropdown from "./DropDown";
 import { ReactComponent as LineGraph } from "../assets/icons/LineGraph.svg";
 import { ReactComponent as ThreeDots } from "../assets/icons/Threedot.svg";
+import { useSelector } from "react-redux";
+import { RootState } from "../store"; // adjust path as needed
 
-// Sample datasets
-const dataMonth = [
-	{ name: "Jan", thisMonth: 10000, lastMonth: 8000 },
-	{ name: "Feb", thisMonth: 12000, lastMonth: 11000 },
-	{ name: "Mar", thisMonth: 15000, lastMonth: 14000 },
-	{ name: "Apr", thisMonth: 20000, lastMonth: 16000 },
-	{ name: "May", thisMonth: 25000, lastMonth: 23000 },
-	{ name: "Jun", thisMonth: 30000, lastMonth: 27000 },
-	{ name: "Jul", thisMonth: 28000, lastMonth: 29000 },
-];
-
-const dataWeek = [
-	{ name: "Mon", thisMonth: 3000, lastMonth: 2500 },
-	{ name: "Tue", thisMonth: 4000, lastMonth: 3200 },
-	{ name: "Wed", thisMonth: 5000, lastMonth: 4200 },
-	{ name: "Thu", thisMonth: 7000, lastMonth: 5200 },
-	{ name: "Fri", thisMonth: 6000, lastMonth: 5000 },
-	{ name: "Sat", thisMonth: 8000, lastMonth: 7000 },
-	{ name: "Sun", thisMonth: 9000, lastMonth: 8000 },
-];
-
-const dataYear = [
-	{ name: "2021", thisMonth: 150000, lastMonth: 130000 },
-	{ name: "2022", thisMonth: 180000, lastMonth: 170000 },
-	{ name: "2023", thisMonth: 200000, lastMonth: 190000 },
-	{ name: "2024", thisMonth: 230000, lastMonth: 210000 },
-];
-
-const SingleLineChart = () => {
-	// Y-axis formatter
-	const formatYAxis = (tick: any) => {
+const SingleLineChart: React.FC = () => {
+	// Y-axis formatter (e.g., 1000 -> 1K)
+	const formatYAxis = (tick: number) => {
 		if (tick / 1000 === 0) {
-			return tick;
+			return tick.toString();
 		}
 		return `${tick / 1000}K`;
 	};
 
-	// State for selected dataset
+	// State for selected timeframe: Month, Week, or Year
 	const [selectedTimeframe, setSelectedTimeframe] = useState<
 		"Month" | "Week" | "Year"
-	>("Month");
+	>("Week");
 
-	// Dynamic dataset based on filter
+	// Retrieve patients data from Redux store
+	const patients = useSelector((state: RootState) => state.patients.patients);
+
+	// Function to aggregate appointments (patients visited) based on selected timeframe
 	const getData = () => {
-		switch (selectedTimeframe) {
-			case "Week":
-				return dataWeek;
-			case "Year":
-				return dataYear;
-			default:
-				return dataMonth;
+		if (!patients || patients.length === 0) return [];
+
+		if (selectedTimeframe === "Month") {
+			// Group by month for the current year
+			const monthNames = [
+				"Jan",
+				"Feb",
+				"Mar",
+				"Apr",
+				"May",
+				"Jun",
+				"Jul",
+				"Aug",
+				"Sep",
+				"Oct",
+				"Nov",
+				"Dec",
+			];
+			const currentYear = new Date().getFullYear();
+			const monthlyCounts = monthNames.map((m) => ({ name: m, thisMonth: 0 }));
+
+			patients.forEach((p) => {
+				const date = new Date(p.aptDate);
+				if (date.getFullYear() === currentYear) {
+					const month = date.getMonth(); // 0-11
+					monthlyCounts[month].thisMonth += 1;
+				}
+			});
+			return monthlyCounts;
+		} else if (selectedTimeframe === "Week") {
+			// Group by day of week in order: Mon, Tue, Wed, Thu, Fri, Sat, Sun
+			const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+			const weeklyCounts = dayNames.map((d) => ({ name: d, thisMonth: 0 }));
+
+			patients.forEach((p) => {
+				const date = new Date(p.aptDate);
+				// getDay() returns 0 for Sunday, 1 for Monday, etc.
+				// To order Monday first, adjust: (day + 6) % 7 gives Monday as index 0.
+				const dayIndex = (date.getDay() + 6) % 7;
+				weeklyCounts[dayIndex].thisMonth += 1;
+			});
+			return weeklyCounts;
+		} else if (selectedTimeframe === "Year") {
+			// Group by year
+			const yearCounts: { [year: string]: number } = {};
+			patients.forEach((p) => {
+				const year = new Date(p.aptDate).getFullYear().toString();
+				yearCounts[year] = (yearCounts[year] || 0) + 1;
+			});
+			const yearsArray = Object.keys(yearCounts).map((year) => ({
+				name: year,
+				thisMonth: yearCounts[year],
+			}));
+			return yearsArray;
 		}
+		return [];
 	};
 
 	return (
@@ -105,36 +130,30 @@ const SingleLineChart = () => {
 			{/* Chart */}
 			<ResponsiveContainer width="100%" height="90%">
 				<LineChart data={getData()}>
-					{/* Grid */}
 					<CartesianGrid strokeDasharray="3 3" stroke="#e4e4e4" />
-					{/* X-Axis */}
 					<XAxis
 						dataKey="name"
 						tick={{ fontSize: 12 }}
 						axisLine={false}
 						tickLine={false}
 					/>
-					{/* Y-Axis */}
 					<YAxis
 						tickFormatter={formatYAxis}
 						tick={{ fontSize: 12 }}
 						axisLine={false}
 					/>
-					{/* Tooltip */}
 					<Tooltip />
-					{/* Legend */}
 					<Legend
 						verticalAlign="top"
 						align="left"
 						wrapperStyle={{ paddingBottom: "10px", fontSize: "14px" }}
 					/>
-					{/* Lines */}
 					<Line
 						type="monotone"
 						dataKey="thisMonth"
 						stroke="#000000"
 						strokeWidth={2}
-						name="This Month"
+						name="Patients Visited"
 					/>
 				</LineChart>
 			</ResponsiveContainer>

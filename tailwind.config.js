@@ -10,6 +10,7 @@ module.exports = {
 			primary: "#0078B3",
 			primaryText: "#003B71",
 			secondaryText: "#718096",
+			borderPrimary: "#E2E8F0",
 			tertiaryText: "#2D3748",
 			secondary: "#E9F5FC",
 			tertiary: "#EBEBEB",

@@ -1,15 +1,43 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
+// components/ProtectedRoute.tsx
+import { useSelector } from "react-redux";
+import { Navigate, useLocation } from "react-router-dom";
+import { RootState } from "../store";
+import { ReactNode, useEffect, useState } from "react";
+import LoadingSpinner from "./LoadingSpinner";
 
-const ProtectedRoute = (props: any) => {
-	const { isAuthenticated, children } = props;
-	if (!isAuthenticated) {
-		// Redirect to sign-in page if not authenticated
-		return <Navigate to="/" />;
+interface ProtectedRouteProps {
+	children: ReactNode;
+	loadingFallback?: ReactNode;
+}
+
+const ProtectedRoute = ({
+	children,
+	loadingFallback = <LoadingSpinner />,
+}: ProtectedRouteProps): JSX.Element => {
+	const location = useLocation();
+	const { isAuthenticated, loading } = useSelector(
+		(state: RootState) => state.auth
+	);
+	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+	useEffect(() => {
+		// Simulate auth check delay
+		const timer = setTimeout(() => setIsCheckingAuth(false), 500);
+		return () => clearTimeout(timer);
+	}, []);
+
+	// Loading state
+	if (loading || isCheckingAuth) {
+		return <>{loadingFallback}</>;
 	}
 
-	// Render the protected content
-	return children;
+	// Unauthenticated state
+	if (!isAuthenticated) {
+		return <Navigate to="/sign-in" state={{ from: location }} replace />;
+	}
+
+	// Authenticated state
+	return <>{children}</>;
 };
 
 export default ProtectedRoute;

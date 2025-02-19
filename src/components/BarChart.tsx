@@ -8,22 +8,13 @@ import {
 	Legend,
 	ResponsiveContainer,
 } from "recharts";
-
-const data = [
-	{ name: "Low", value: 30, fill: "#9de1d3" },
-	{ name: "Med", value: 20, fill: "#f8b26a" },
-	{ name: "High", value: 35, fill: "#b21f23" },
-	{ name: "Reschedule", value: 10, fill: "#c7d9f8" },
-	{ name: "Transport", value: 25, fill: "#a7e5a5" },
-];
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 // Function to create fully rounded bar paths
 const getPath = (x: number, y: number, width: number, height: number) => {
-	// Ensure height is valid
 	const correctedHeight = Math.max(height, 0);
-	// Ensure radius does not exceed half of the width
 	const radius = Math.min(width / 4, correctedHeight / 2);
-
 	return `
     M${x + radius},${y} 
     h${width - 2 * radius} 
@@ -45,6 +36,41 @@ const CustomBar = (props: any) => {
 };
 
 const BarChartComponent = () => {
+	// Get patients data from Redux store
+	const patients = useSelector((state: RootState) => state.patients.patients);
+
+	// Aggregate patients by risk
+	const riskCounts = patients.reduce((acc, patient) => {
+		let risk = patient.risk || "Unknown";
+		// Normalize common cases
+		const lowerRisk = risk.toLowerCase();
+		if (lowerRisk === "very high") risk = "High";
+		else if (lowerRisk === "medium") risk = "Med";
+		else if (lowerRisk === "low") risk = "Low";
+		// For "Reschedule" and "Transport", leave as is
+		if (!acc[risk]) {
+			acc[risk] = { name: risk, value: 0 };
+		}
+		acc[risk].value += 1;
+		return acc;
+	}, {} as { [key: string]: { name: string; value: number } });
+
+	const aggregatedData = Object.values(riskCounts);
+
+	// Map risk categories to colors (same as your sample)
+	const riskColorMapping: { [key: string]: string } = {
+		Low: "#9de1d3",
+		Med: "#f8b26a",
+		High: "#b21f23",
+		Reschedule: "#c7d9f8",
+		Transport: "#a7e5a5",
+	};
+
+	const data = aggregatedData.map((item) => ({
+		...item,
+		fill: riskColorMapping[item.name] || "#ccc",
+	}));
+
 	const formatYAxis = (tick: any) => `${tick}K`;
 
 	return (
