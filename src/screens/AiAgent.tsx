@@ -6,12 +6,35 @@ import ProfileDetails from "../components/ProfileDetails";
 import { globalColors } from "../utils/colors";
 import { motion } from "motion/react";
 import { SlideUp } from "../animations/SlideUp";
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
+
 const AiAgent = () => {
 	//Mainting State for Table
 	const [isTableMinimised, setIsTableMinimised] = useState(false);
 	const [activePatient, setActivePatient] = useState({});
 	const [activeTab, setActiveTab] = useState("active");
 	const [selectedRow, setSelectedRow] = useState<number | null>(null);
+	const { state } = useLocation();
+
+	// Retrieve all patients from Redux
+	const patients = useSelector((state: RootState) => state.patients.patients);
+
+	// Total patients count
+	const totalPatients = patients.length;
+
+	// Aggregate counts based on patient status
+	const statusCounts = patients.reduce((acc, patient) => {
+		// If patientStatus is an object, extract its patientStatus property; otherwise, use it directly.
+		const status =
+			patient.patientStatus && typeof patient.patientStatus === "object"
+				? patient.patientStatus.patientStatus
+				: (patient.patientStatus as string) || "Unknown";
+		acc[status] = (acc[status] || 0) + 1;
+		return acc;
+	}, {} as Record<string, number>);
+
 	return (
 		<motion.div
 			className="h-full"
@@ -23,32 +46,32 @@ const AiAgent = () => {
 			{!isTableMinimised && (
 				<div className="flex flex-row pt-[22px] gap-x-[25px]">
 					<CountCard
-						Title="Total Agents"
-						Count="108"
+						Title="Total Patients"
+						Count={totalPatients || 0}
 						Icon={<People fill={globalColors.secondaryColor} />}
 						BgColor="bg-secondary"
 					/>
 					<CountCard
 						Title="Confirmed"
-						Count="72"
+						Count={statusCounts["Confirmed"] || 0}
 						Icon={<People fill={globalColors.lightGreenBg} />}
 						BgColor="bg-lightGreen"
 					/>
 					<CountCard
 						Title="Rescheduled"
-						Count="23"
+						Count={statusCounts["Rescheduled"] || 0}
 						Icon={<People fill="#A0AEC0" />}
 						BgColor="bg-[#F7FAFC]"
 					/>
 					<CountCard
 						Title="Cancelled"
-						Count="07"
+						Count={statusCounts["Cancelled"] || 0}
 						Icon={<People fill="#ED8936" />}
 						BgColor="bg-[#FFFAF0]"
 					/>
 					<CountCard
 						Title="Escalations"
-						Count="08"
+						Count={statusCounts["Escalated"] || 0}
 						Icon={<People fill="#E53E3E" />}
 						BgColor="bg-[#FFF5F5]"
 					/>
@@ -105,6 +128,7 @@ const AiAgent = () => {
 					setIsTableMinimised={setIsTableMinimised}
 					setActivePatient={setActivePatient}
 					selectedRow={selectedRow}
+					sortBy={state?.sortBy}
 					setSelectedRow={setSelectedRow}
 				/>
 				{isTableMinimised && (
